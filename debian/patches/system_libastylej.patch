@@ -1,0 +1,35 @@
+Description: Use system astyle, upstream uses a custom version
+Author: Scott Howard <showard@debian.org>
+Index: arduino/app/src/cc/arduino/packages/formatter/AStyleInterface.java
+===================================================================
+--- arduino.orig/app/src/cc/arduino/packages/formatter/AStyleInterface.java
++++ arduino/app/src/cc/arduino/packages/formatter/AStyleInterface.java
+@@ -1,4 +1,4 @@
+-package cc.arduino.packages.formatter;
++//package cc.arduino.packages.formatter;
+ 
+ import processing.app.Base;
+ 
+Index: arduino/app/src/cc/arduino/packages/formatter/AStyle.java
+===================================================================
+--- arduino.orig/app/src/cc/arduino/packages/formatter/AStyle.java
++++ arduino/app/src/cc/arduino/packages/formatter/AStyle.java
+@@ -1,4 +1,4 @@
+-package cc.arduino.packages.formatter;
++//package cc.arduino.packages.formatter;
+ 
+ import processing.app.Base;
+ import processing.app.Editor;
+Index: arduino/app/src/processing/app/Editor.java
+===================================================================
+--- arduino.orig/app/src/processing/app/Editor.java
++++ arduino/app/src/processing/app/Editor.java
+@@ -914,7 +914,7 @@ public class Editor extends JFrame imple
+   protected JMenu addInternalTools(JMenu menu) {
+     JMenuItem item;
+ 
+-    item = createToolMenuItem("cc.arduino.packages.formatter.AStyle");
++    item = createToolMenuItem("AStyle");
+     item.setName("menuToolsAutoFormat");
+     int modifiers = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+     item.setAccelerator(KeyStroke.getKeyStroke('T', modifiers));

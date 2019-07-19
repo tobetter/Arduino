@@ -1,0 +1,37 @@
+Description: Don't do anything to windows or macosx directories
+Author: Scott Howard <showard@debian.org>
+
+Index: arduino/build/build.xml
+===================================================================
+--- arduino.orig/build/build.xml
++++ arduino/build/build.xml
+@@ -925,7 +925,7 @@
+   <!-- - - - - - - - -->
+ 
+   <target name="clean" description="Perform a spring cleaning"
+-	  depends="linux-clean, windows-clean, macosx-clean, subprojects-clean">
++	  depends="linux-clean, subprojects-clean">
+   </target>
+ 
+ </project>
+Index: arduino/app/src/processing/app/Base.java
+===================================================================
+--- arduino.orig/app/src/processing/app/Base.java
++++ arduino/app/src/processing/app/Base.java
+@@ -43,7 +43,6 @@ import processing.app.helpers.filefilter
+ import processing.app.helpers.filefilters.OnlyFilesWithExtension;
+ import processing.app.javax.swing.filechooser.FileNameExtensionFilter;
+ import processing.app.legacy.PApplet;
+-import processing.app.macosx.ThinkDifferent;
+ import processing.app.packages.Library;
+ import processing.app.packages.LibraryList;
+ import processing.app.tools.MenuScroller;
+@@ -203,8 +202,6 @@ public class Base {
+ 
+   public Base(String[] args) throws Exception {
+     getPlatform().init();
+-    if (OSUtils.isMacOS())
+-      ThinkDifferent.init(this);
+ 
+     String sketchbookPath = BaseNoGui.getSketchbookPath();
+ 

@@ -1,0 +1,11 @@
+remove_update_warning.patch
+install_jar_links.patch
+wrapper_for_deb.patch
+remove_copying_binaries.patch
+permission_fix.patch
+no-macosx-windows-build.patch
+adk2install_bssoc.patch
+zepto_js.patch
+system_libastylej.patch
+no-download-reference.patch
+enable_mime_desktop.patch

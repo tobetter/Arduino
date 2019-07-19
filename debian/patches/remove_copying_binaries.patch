@@ -1,0 +1,47 @@
+Description: Arduino copies precompiled binaries into the build tree,
+ stop that
+Author: Scott Howard <showard@debian.org>
+Index: arduino/build/build.xml
+===================================================================
+--- arduino.orig/build/build.xml
++++ arduino/build/build.xml
+@@ -603,39 +603,9 @@
+   </target>
+ 
+   <target name="linux32-build" depends="linux-build" description="Build linux (32-bit) version">
+-    <!-- Unzip ARM tools -->
+-    <antcall target="untar">
+-      <param name="archive_file" value="${staging_folder}/dist/gcc-arm-none-eabi-4.8.3-2014q1-linux32.tar.gz" />
+-      <param name="archive_url" value="http://downloads.arduino.cc/gcc-arm-none-eabi-4.8.3-2014q1-linux32.tar.gz" />
+-      <param name="final_folder" value="${staging_folder}/work/${staging_hardware_folder}/tools/gcc-arm-none-eabi-4.8.3-2014q1" />
+-      <param name="dest_folder" value="${staging_folder}/work/${staging_hardware_folder}/tools/" />
+-    </antcall>
+-
+-    <!-- Unzip AVR tools -->
+-    <antcall target="unzip">
+-      <param name="archive_file" value="${staging_folder}/avr-toolchain-linux32-gcc-4.8.1.zip" />
+-      <param name="archive_url" value="http://downloads.arduino.cc/avr-toolchain-linux32-gcc-4.8.1.zip" />
+-      <param name="final_folder" value="${staging_folder}/work/${staging_hardware_folder}/tools/avr" />
+-      <param name="dest_folder" value="${staging_folder}/work/${staging_hardware_folder}/tools/avr" />
+-    </antcall>
+   </target>
+ 
+   <target name="linux64-build" depends="linux-build" description="Build linux (64-bit) version">
+-    <!-- Unzip ARM tools -->
+-    <antcall target="untar">
+-      <param name="archive_file" value="${staging_folder}/dist/gcc-arm-none-eabi-4.8.3-2014q1-linux64.tar.gz" />
+-      <param name="archive_url" value="http://downloads.arduino.cc/gcc-arm-none-eabi-4.8.3-2014q1-linux64.tar.gz" />
+-      <param name="final_folder" value="${staging_folder}/work/${staging_hardware_folder}/tools/gcc-arm-none-eabi-4.8.3-2014q1" />
+-      <param name="dest_folder" value="${staging_folder}/work/${staging_hardware_folder}/tools/" />
+-    </antcall>
+-
+-    <!-- Unzip AVR tools -->
+-    <antcall target="unzip">
+-      <param name="archive_file" value="${staging_folder}/avr-toolchain-linux64-gcc-4.8.1.zip" />
+-      <param name="archive_url" value="http://downloads.arduino.cc/avr-toolchain-linux64-gcc-4.8.1.zip" />
+-      <param name="final_folder" value="${staging_folder}/work/${staging_hardware_folder}/tools/avr" />
+-      <param name="dest_folder" value="${staging_folder}/work/${staging_hardware_folder}/tools/avr" />
+-    </antcall>
+   </target>
+ 
+   <target name="linux32-run" depends="linux32-build" description="Run Linux (32-bit) version">

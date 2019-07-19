@@ -1,0 +1,16 @@
+Description: since we install sharedmimeinfo, allow .desktop to open
+ files, thanks lintian
+Author: Scott Howard <showard@nd.edu>
+Index: arduino/build/linux/dist/arduino.desktop
+===================================================================
+--- arduino.orig/build/linux/dist/arduino.desktop
++++ arduino/build/linux/dist/arduino.desktop
+@@ -3,7 +3,7 @@ Type=Application
+ Name=Arduino IDE
+ GenericName=Integrated Development Environment
+ Comment=An IDE for Arduino-compatible electronics prototyping platforms
+-Exec=arduino
++Exec=arduino %F
+ Icon=arduino
+ Terminal=false
+ Categories=Development;IDE;Electronics;

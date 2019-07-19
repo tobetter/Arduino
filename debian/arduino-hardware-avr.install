@@ -1,0 +1,5 @@
+build/linux/work/hardware/arduino/avr			usr/share/arduino/hardware/arduino
+build/linux/work/hardware/package_index_bundled.json	usr/share/arduino/hardware/
+build/linux/work/hardware/platform.keys.rewrite.txt	usr/share/arduino/hardware/
+build/linux/work/hardware/platform.txt			usr/share/arduino/hardware/
+build/linux/work/hardware/tools/avr			usr/share/arduino/hardware/tools

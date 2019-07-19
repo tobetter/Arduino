@@ -1,0 +1,69 @@
+Source: arduino
+Section: electronics
+Priority: extra
+Maintainer: Dongjin Kim <tobetter@gmail.com>
+Uploaders: Philip Hands <phil@hands.com>,
+  Dongjin Kim <tobetter@gmail.com>
+Build-Depends: debhelper (>= 8), javahelper, default-jdk, 
+ libjssc-java, libjna-java, libjsch-java, libjmdns-java,
+ libcommons-logging-java, libcommons-httpclient-java, libcommons-exec-java, ant,
+ libastylej-jni, gcc-avr (>= 4.7.0), avr-libc (>= 1.8.0), asciidoc, xsltproc
+Standards-Version: 3.9.6
+Homepage: http://www.arduino.cc
+Vcs-Git: git://anonscm.debian.org/collab-maint/arduino.git
+Vcs-Browser: http://anonscm.debian.org/gitweb/?p=collab-maint/arduino.git
+
+Package: arduino
+Architecture: all
+Depends: ${java:Depends}, ${misc:Depends},
+ arduino-core (= ${binary:Version}), libastylej-jni
+Recommends: extra-xdg-menus, policykit-1, astyle
+Description: AVR development board IDE and built-in libraries
+ Arduino is an open-source electronics prototyping platform based on
+ flexible, easy-to-use hardware and software. It's intended for artists,
+ designers, hobbyists, and anyone interested in creating interactive
+ objects or environments.
+ .
+ This package will install the integrated development environment that
+ allows for program writing, code verfication, compiling, and uploading
+ to the Arduino development board. Libraries and example code will also
+ be installed.
+
+Package: arduino-core
+Architecture: all
+Depends: ${misc:Depends}, arduino-hardware-avr (= ${binary:Version}) | arduino-hardware
+Suggests: arduino-mk, arduino-doc
+Description: Libraries and code for the Arduino platform
+ Arduino is an open hardware microcontroller platform.  This package contains
+ the minimal set of tools to allow one to program an Arduino.  It also contains
+ examples and libraries. For a CLI, see the 'arduino-mk' package.
+ .
+ This package does not include the Java based Integrated Development
+ Environment, which can be found in the 'arduino' package.
+
+Package: arduino-doc
+Architecture: all
+Section: doc
+Replaces: arduino-core
+Breaks: arduino-core
+Depends: ${misc:Depends}
+Suggests: arduino-mk, libjs-jquery, libjs-jquery-ui
+Description: Documentation and examples for the Arduino platform
+ Arduino is an open hardware microcontroller platform.  This package contains
+ the minimal set of tools to allow one to program an Arduino.  It also contains
+ examples and libraries. For a CLI, see the 'arduino-mk' package.
+ .
+ This package contains reference documentation and example code.
+
+Package: arduino-hardware-avr
+Architecture: all
+Provides: arduino-hardware
+Replaces: arduino-core
+Breaks: arduino-core
+Depends: ${misc:Depends}, gcc-avr (>= 4.7.0), avrdude, gcc, avr-libc (>= 1.8.0)
+Description: Arduino support for AVR-based platforms
+ Arduino is an open hardware microcontroller platform.  This package contains
+ the minimal set of tools to allow one to program an Arduino.  It also contains
+ examples and libraries. For a CLI, see the 'arduino-mk' package.
+ .
+ This package enables support for AVR-based Arduinos, such as the Uno.

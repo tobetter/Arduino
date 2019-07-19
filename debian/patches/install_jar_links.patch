@@ -1,0 +1,17 @@
+Description: Prevents ant from following symlinks and including library jars
+ in debian package
+Author: Scott Howard <showard314@gmail.com>
+
+Index: arduino/build/build.xml
+===================================================================
+--- arduino.orig/build/build.xml
++++ arduino/build/build.xml
+@@ -48,7 +48,7 @@
+   <property name="launch4j-download-unpack-target-name" value="launch4j-linux"/>
+ 
+   <!-- Libraries required for running arduino -->
+-  <fileset dir=".." id="runtime.jars">
++  <fileset dir=".." id="runtime.jars" followsymlinks="no">
+     <include name="arduino-core/arduino-core.jar" />
+     <include name="app/pde.jar" />
+     <include name="app/lib/commons-codec-1.7.jar" />

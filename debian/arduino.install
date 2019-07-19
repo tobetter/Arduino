@@ -1,0 +1,13 @@
+#!/usr/bin/dh-exec
+
+#build/linux/dist/arduino.desktop		usr/share/applications/
+build/linux/work/arduino			usr/share/arduino/
+build/linux/work/lib				usr/share/arduino/
+build/linux/work/lib/arduino-arduinoide.xml	usr/share/mime/packages/
+build/shared/icons/*.xpm			usr/share/pixmaps/
+build/shared/icons/1*				usr/share/icons/hicolor/
+build/shared/icons/2*				usr/share/icons/hicolor/
+build/shared/icons/3*				usr/share/icons/hicolor/
+build/shared/icons/4*				usr/share/icons/hicolor/
+debian/dist/arduino-add-groups			usr/bin/
+debian/dist/cc.arduino.add-groups.policy	usr/share/polkit-1/actions

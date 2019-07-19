@@ -1,0 +1,55 @@
+#!/usr/bin/make -f
+#test build all .ino files, only works for uno at the moment
+
+SOURCES=$(sort $(shell find $(CURDIR)/build -type f -name '*.ino' -not -path "*/Esplora/*" -not -path "*/Robot_Motor/*" -not -path "*/Scheduler/*" -not -path "*/USBHost/*"\
+-not -path "*/Robot_Control/*" -not -path "*/Temboo/*" -not -path "*/Yun*/*" -not -path "*/Audio/*" -not -path "*/09.USB/*"\
+-not -path "*/p13_TouchSensorLamp/*" -not -path "*/MultiSerialMega/*"))
+#/Scheduler/ USBHost Audio = SAM
+#esplora = --board arduino:avr:uno
+#robot_motor= robot
+#Temboo = yun?
+#Yun = yun
+#09.USB=Arduino Leonardo, Micro or Due
+#p13_TouchSensorLamp = needs capacitive sensor library
+#MultiSerialMega=mega
+
+BOARD?=avr:uno
+
+STAMPS=$(patsubst %.ino,%.stamp,$(SOURCES))
+
+TEMPBUILDDIR= $(CURDIR)/tempdir
+BUILDDIR = $(TEMPBUILDDIR)/build
+PREFSFILE = $(TEMPBUILDDIR)/prefs.txt
+ARDUINO = cd $(CURDIR)/build/linux/work && java -Djava.awt.headless=true -cp $(CURDIR)/build/linux/work/lib/*:$(CURDIR)/app/lib/*
+
+all: $(PREFSFILE) $(BUILDDIR)/buildprefs.txt $(STAMPS)
+#all: $(STAMPS)
+
+%.stamp: %.ino $(CURDIR)/build/linux/work/lib/libastylej.so $(CURDIR)/build/linux/work/hardware/tools/avr/bin/avr-g++
+	sed -i 's/build\.project_name = .*/build\.project_name = $(addsuffix .cpp,$(basename $(notdir $<)))/' $(BUILDDIR)/buildprefs.txt && \
+	$(ARDUINO) processing.app.BaseNoGui -v --preferences-file $(PREFSFILE) --verify $<
+	touch $@
+
+$(CURDIR)/build/linux/work/lib/libastylej.so: /usr/lib/jni/libastylej.so
+	ln -s /usr/lib/jni/libastylej.so $@
+
+$(CURDIR)/build/linux/work/hardware/tools/avr/bin/avr-g++: /usr/bin/avr-g++
+	mkdir -p $(CURDIR)/build/linux/work/hardware/tools/avr
+	mkdir -p $(CURDIR)/build/linux/work/hardware/tools/gcc-arm-none-eabi-4.8.3-2014q1/arm-none-eabi
+	ln -s /usr/bin $(CURDIR)/build/linux/work/hardware/tools/avr/bin
+	ln -s /usr/lib $(CURDIR)/build/linux/work/hardware/tools/avr/lib
+	ln -s /usr/bin $(CURDIR)/build/linux/work/hardware/tools/gcc-arm-none-eabi-4.8.3-2014q1/bin
+	ln -s /usr/lib $(CURDIR)/build/linux/work/hardware/tools/gcc-arm-none-eabi-4.8.3-2014q1/lib
+	ln -s /usr/lib/arm-none-eabi/newlib $(CURDIR)/build/linux/work/hardware/tools/gcc-arm-none-eabi-4.8.3-2014q1/arm-none-eabi/lib
+
+$(PREFSFILE):
+	mkdir -p $(BUILDDIR)
+	$(ARDUINO) processing.app.Base --board arduino:$(BOARD) --preferences-file $(PREFSFILE) --pref build.path=$(BUILDDIR) --pref sketchbook.path=$(CURDIR) --save-prefs
+
+$(BUILDDIR)/buildprefs.txt:
+	touch $(BUILDDIR)/buildprefs.txt
+
+clean:
+	rm -fr $(STAMPS) $(TEMPBUILDDIR) $(CURDIR)/build/linux/work/hardware/tools/* $(CURDIR)/build/linux/work/lib/libastylej.so
+
+.PHONY: all clean

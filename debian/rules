@@ -1,0 +1,98 @@
+#!/usr/bin/make -f
+
+# Uncomment this to turn on verbose mode.
+# export DH_VERBOSE=1
+
+export JAVA_HOME=/usr/lib/jvm/default-java
+export CLASSPATH=\
+/usr/share/java/jna.jar:\
+/usr/share/java/jssc.jar:\
+/usr/share/java/jsch.jar:\
+/usr/share/java/jmdns.jar:\
+/usr/share/java/commons-logging.jar:\
+/usr/share/java/commons-httpclient.jar:\
+/usr/share/java/commons-exec.jar
+
+SVNTAG=$(shell dpkg-parsechangelog | grep Version | cut -f2 -d" " | sed 's/[0-9]*:\([0-9].*\)+dfsg[0-9]*-[0-9]/\1/')
+
+%:
+	dh $@ --with javahelper
+
+override_dh_clean:
+	-mkdir build/windows build/macosx #build.xml needs this
+	rm -rf build/linux/work/hardware/tools
+	cd build && ant clean
+	rm -f debian/permission-checker/*.class build/shared/arduino.1
+	dh_clean
+	rm -r build/windows build/macosx #debian doesn't need this
+	make -f debian/Makefile-test clean
+
+override_jh_build:
+	jh_linkjars
+	mkdir -p build/linux/work/hardware/tools
+	#remove unneeded macosx support
+	rm -rf app/src/processing/app/macosx
+	cd build && ant -Djava.net.preferIPv4Stack=true -Dplatform=linuxaarch64 clean dist
+	#rm -f build/linux/work/lib/version.txt && echo $(SVNTAG) > build/linux/work/lib/version.txt #comment out after beta
+	javac debian/permission-checker/arduinopc.java
+	cd debian/permission-checker && jar cfe arduinopc.jar arduinopc *.class
+	mv debian/permission-checker/*.jar .
+	a2x --no-xmllint -f manpage build/shared/manpage.adoc
+
+override_dh_installdocs:
+	dh_installdocs
+	find debian/arduino-core/usr/share/ -name *.html -exec sed -i 's/http:\/\/code\.jquery\.com\/jquery.*\.min\.js/\/usr\/share\/javascript\/jquery\/jquery\.min\.js/' {} \;
+	find debian/arduino-core/usr/share/ -name *.html -exec sed -i 's/http:\/\/code\.jquery\.com\/ui\/.*\/jquery\-ui\.min\.js/\/usr\/share\/javascript\/jquery\-ui\/jquery\-ui\.min\.js/' {} \;
+
+override_dh_installchangelogs:
+	dh_installchangelogs -k build/linux/work/revisions.txt
+
+override_dh_compress:
+	dh_compress -X.ino
+
+override_dh_auto_test:
+#ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
+#	env -u LD_PRELOAD make -f debian/Makefile-test -j 1
+#endif
+	
+override_dh_install:
+	find build/linux/work -type d -empty -delete
+	dh_install -Xlicense -XLICENSE -XLicense -XMangler/make.sh -X.elf -X.a -X.lib -X.min.js
+	mkdir -p debian/arduino-core/usr/share/arduino/lib
+	#mv debian/arduino/usr/share/arduino/lib/*.txt debian/arduino-core/usr/share/arduino/lib
+	#chmod +x debian/arduino-hardware-avr/usr/share/arduino/hardware/arduino/avr/bootloaders/optiboot/makeall
+
+override_jh_depends:
+	jh_depends -jdefault
+
+export DEB_COPYRIGHT_CHECK_IGNORE_REGEX=\.po|\.properties|\.png|\.ico|\.jpg|^debian/(changelog|copyright(|_hints|_newhints))$
+copyright_check:
+	${MAKE} -f /usr/share/cdbs/1/rules/utils.mk debian/stamp-copyright-check
+	rm debian/stamp-copyright-check
+
+DIRNAME=Arduino-$(SVNTAG)
+SOURCEDIR=$(CURDIR)/debian/$(DIRNAME)
+TARGZFILE=arduino_$(SVNTAG).orig.tar.gz
+TARXZFILE=arduino_$(SVNTAG)+dfsg.orig.tar.xz
+
+get-orig-source:
+	uscan --download-current-version --rename ;\
+	jh_repack --version $(SVNTAG) ../arduino_$(SVNTAG) ;\
+	tar -xzf ../$(TARGZFILE) -C debian/ ;\
+	find $(SOURCEDIR) -type f -iname *.jar -or -iname *.tgz -or -iname *.so\
+                    -or -iname .cvsignore -or -iname *.bz2 -or -iname *macosx*\
+                    -or -iname *windows* -or -iname *.exe -or -iname *.dll\
+                    -or -iname *.elf -or -iname *.min.js -or -iname *.uvproj\
+                    -or -iname *.a -or -iname *.pdf -or -iname *.zip -or -iname *.lib\
+                    -or -iname *.hex | xargs -n1 rm -rf;\
+	find $(SOURCEDIR) -type d -iname firmwares -or -iname extras -prune | xargs -n1 rm -rf;\
+	rm -rf $(SOURCEDIR)/hardware/arduino/sam;\
+	rm -rf $(SOURCEDIR)/build/javadoc;\
+	rm -rf $(SOURCEDIR)/build/linux/dist/tools $(SOURCEDIR)/arduino-core/src/processing/app/i18n/python;\
+	wget http://arduino.cc/download.php?f=/reference-$(SVNTAG).zip -O $(SOURCEDIR)/reference.zip;\
+	unzip $(SOURCEDIR)/reference.zip -d $(SOURCEDIR) -x */code.jquery.com/*;\
+	rm $(SOURCEDIR)/reference.zip;\
+	tar -Jcf $(CURDIR)/../$(TARXZFILE) -C $(CURDIR)/debian $(DIRNAME);\
+	rm -fr $(SOURCEDIR);\
+	rm -fr ../$(TARGZFILE)
+

@@ -1,0 +1,18 @@
+Many files are removed to make this package DFSG compliant.
+
+Many precompiled files (elf, a, pdf, min.js, lib, dll, exe) have been removed
+
+the sam hardware requires CMSIS, which is not free. Example, core_cm3.h
+* Copyright (C) 2009-2011 ARM Limited. All rights reserved.
+*
+* @par
+* ARM Limited (ARM) is supplying this software for use with Cortex-M
+* processor based microcontrollers. This file can be freely distributed
+* within development tools that are supporting such ARM based processors.
+
+arduino-hardware-sam will be made as a new package in non-free for users who wish to use it
+
+Some additional folders that are deleted:
+- build/linux/dist/tools: compiled binaries, we'll link to system binaries
+- arduino-core/src/processing/app/i18n/python: unecessary for build, redundant to system python libs
+- extras and firmwares, not needed for most users

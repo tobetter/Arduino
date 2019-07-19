@@ -1,0 +1,10 @@
+#!/usr/bin/dh-exec
+
+build/linux/work/arduino-builder                usr/share/arduino
+build/linux/work/arduino-linux-setup.sh		usr/share/arduino
+build/linux/work/install.sh                     usr/share/arduino
+build/linux/work/libraries                      usr/share/arduino
+build/linux/work/revisions.txt                  usr/share/arduino
+build/linux/work/tools                          usr/share/arduino
+build/linux/work/tools-builder			usr/share/arduino
+build/linux/work/uninstall.sh                   usr/share/arduino
