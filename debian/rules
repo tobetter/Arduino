@@ -62,6 +62,9 @@ override_dh_install:
 	#mv debian/arduino/usr/share/arduino/lib/*.txt debian/arduino-core/usr/share/arduino/lib
 	#chmod +x debian/arduino-hardware-avr/usr/share/arduino/hardware/arduino/avr/bootloaders/optiboot/makeall
 
+override_dh_shlibdeps:
+	dh_shlibdeps --dpkg-shlibdeps-params="--ignore-missing-info"
+
 override_jh_depends:
 	jh_depends -jdefault
 
