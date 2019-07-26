@@ -54,16 +54,3 @@ Description: Documentation and examples for the Arduino platform
  examples and libraries. For a CLI, see the 'arduino-mk' package.
  .
  This package contains reference documentation and example code.
-
-Package: arduino-hardware-avr
-Architecture: all
-Provides: arduino-hardware
-Replaces: arduino-core
-Breaks: arduino-core
-Depends: ${misc:Depends}, gcc-avr (>= 4.7.0), avrdude, gcc, avr-libc (>= 1.8.0)
-Description: Arduino support for AVR-based platforms
- Arduino is an open hardware microcontroller platform.  This package contains
- the minimal set of tools to allow one to program an Arduino.  It also contains
- examples and libraries. For a CLI, see the 'arduino-mk' package.
- .
- This package enables support for AVR-based Arduinos, such as the Uno.
